@@ -1,44 +1,81 @@
-# 🧠🎙️ AI-Enabled Real-Time Speech-to-Sign Language Converter
+# 🧠 Text and Voice to Indian Sign Language Converter
 
-A final year engineering project that captures real-time voice (English/Tamil), translates it to English (if Tamil), restructures it to match Indian Sign Language (ISL) grammar, and animates the signs using a 3D avatar — all in real-time!
+A Flask-based application that converts text and voice input to Indian Sign Language (ISL) using SIGML animations and the Stanford Parser.
 
 ---
 
-## ⚙️ Tech Stack
+## ⚠️ UPDATE
 
-- Python
+**Stanford Parser is no longer accessible directly via URL.**  
+Please follow these steps:
+
+1. **Download** the [Stanford Parser ZIP manually](https://nlp.stanford.edu/software/lex-parser.html).
+2. **Extract** it into the same directory where your `main.py` is located.
+3. **Set the `JAVA_HOME` environment variable** to your JDK installation path.
+4. **Add `%JAVA_HOME%\bin` to your system PATH.**
+
+Refer to external guides on setting `JAVA_HOME` if you're unsure how to do this.
+
+---
+
+## 🔧 Installation
+
+### Requirements
+
+- Python 3.x
 - Flask
-- Tailwind CSS
-- Google Speech-to-Text API
-- Google Translate API (Tamil to English)
-- NLTK
-- Custom ISL Gloss Dictionary
-- Blender / Unity (for Avatar Animation)
-- JavaScript (Frontend interaction)
+- spaCy
+- Stanza
+- Java (for Stanford Parser)
+
+### Steps
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/yourusername/your-repo.git
+    cd your-repo
+    ```
+
+2. Install Python dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    pip install spacy
+    ```
+
+3. Run the app:
+
+    ```bash
+    python main.py
+    ```
+
+4. Open your browser and go to:
+
+    ```
+    http://127.0.0.1:5000/
+    ```
 
 ---
 
-## 🚀 Features
+## 📝 Note
 
-- Real-time speech recognition
-- Tamil and English voice input support
-- AI-based translation and preprocessing
-- Text-to-ISL gloss mapping
-- Avatar-based sign rendering
-- Clean, responsive web interface
+- This project uses **SIGML** files to animate ISL signs.
+- These files are manually created and **may not be 100% accurate**, as generating SIGML using **HamNoSys** is a complex and time-consuming process.
+
+We welcome improvements or corrections to SIGML animations from the community.
 
 ---
 
-## 🛠️ Installation
+## 💡 Credits
 
-Make sure you have Python and pip installed.
+- [Stanza NLP](https://stanfordnlp.github.io/stanza/)
+- [spaCy](https://spacy.io/)
+- [SIGML](https://www.sign-lang.uni-hamburg.de/SignWriting/SigML.html)
 
-```bash
-git clone https://github.com/yourusername/text-to-sign-language-avatar.git
-cd text-to-sign-language-avatar
+---
 
-# Install dependencies
-pip install -r requirements.txt
+## 📜 License
 
-# Run the project
-python main.py
+This project is open-source under the [MIT License](LICENSE).
+
