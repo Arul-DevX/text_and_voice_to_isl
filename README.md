@@ -32,29 +32,29 @@ Refer to external guides on setting `JAVA_HOME` if you're unsure how to do this.
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/yourusername/your-repo.git
-    cd your-repo
-    ```
+   ```bash
+   git clone https://github.com/yourusername/your-repo.git
+   cd your-repo
+   ```
 
 2. Install Python dependencies:
 
-    ```bash
-    pip install -r requirements.txt
-    pip install spacy
-    ```
+   ```bash
+   pip install -r requirements.txt
+   pip install spacy
+   ```
 
 3. Run the app:
 
-    ```bash
-    python main.py
-    ```
+   ```bash
+   python main.py
+   ```
 
 4. Open your browser and go to:
 
-    ```
-    http://127.0.0.1:5000/
-    ```
+   ```
+   http://127.0.0.1:5000/
+   ```
 
 ---
 
@@ -69,6 +69,7 @@ We welcome improvements or corrections to SIGML animations from the community.
 
 ## 💡 Credits
 
+- https://github.com/shoebham/text_to_isl/blob/main/README.md
 - [Stanza NLP](https://stanfordnlp.github.io/stanza/)
 - [spaCy](https://spacy.io/)
 - [SIGML](https://www.sign-lang.uni-hamburg.de/SignWriting/SigML.html)
@@ -78,4 +79,3 @@ We welcome improvements or corrections to SIGML animations from the community.
 ## 📜 License
 
 This project is open-source under the [MIT License](LICENSE).
-
