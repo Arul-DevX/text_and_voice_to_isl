@@ -56,6 +56,8 @@ Refer to external guides on setting `JAVA_HOME` if you're unsure how to do this.
    http://127.0.0.1:5000/
    ```
 
+   ![Demo](demo.gif)
+
 ---
 
 ## 📝 Note
