@@ -3,4 +3,5 @@
 .DS_Store
 stanford-parser-full-2018-10-17/
 stanza_resources/
+.venv
 

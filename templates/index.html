@@ -1,30 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>TEXT TO ISL</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <link rel='stylesheet' type='text/css' media='screen' href="{{url_for('static',filename='./style.css')}}">
-
-    <!-- <link rel="stylesheet" href="http://vhg.cmp.uea.ac.uk/tech/jas/vhg2021/cwa/cwasa.css" /> -->
-    <!-- <script type="text/javascript" src="http://vhg.cmp.uea.ac.uk/tech/jas/vhg2021/cwa/allcsa.js"></script> -->
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text and Voice to ISL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <meta http-equiv="Access-Control-Allow-Methods" content="GET">
-    <link rel="stylesheet"
-    href="{{url_for('static',filename='css/cwasa.css')}}">
-    <script type="text/javascript"
-    src="{{url_for('static',filename='js/allcsa.js')}}"></script>
-    <!-- player css and js files -->
-    <!-- <link rel="stylesheet" href="css/cwasa.css" /> -->
-    <!-- <script type="text/javascript" src="js/allcsa.js"></script> -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/cwasa.css')}}">
+    <script type="text/javascript" src="{{url_for('static',filename='js/allcsa.js')}}"></script>
 
     <script language="javascript">
         // Initial configuration
         var initCfg = {
-            "avsbsl" : ["luna", "siggi", "anna", "marc", "francoise"],
+            "avsbsl" : ["anna", "bahia", "beatrice", "candy", "carmen", "darshan", "dino", "francoise", "genie", "luna", "marc", "max", "monkey", "otis", "robotboy", "siggi"],
             "avSettings" : { "avList": "avsbsl", "initAv": "marc" }
         };
 
@@ -34,138 +24,137 @@
         // global variable to tell if avatar is ready or not
         var tuavatarLoaded = false;
 
-
         var playerAvailableToPlay = true;
     </script>
-<!-- <script language="javascript" src="js/animationPlayer.js"></script> -->
-<style type="text/css">
-    body {
-        overflow-y: hidden !important;
-        overflow-x: hidden !important;
-    }
-</style>
-
+    <style>
+        /* Custom styles that might be difficult with Tailwind */
+        .undisplayed {
+            display: none;
+        }
+        
+        /* Ensure the canvas is properly sized */
+        .canvasAv {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
-<body onload="CWASA.init(initCfg);">
+<body onload="CWASA.init(initCfg);" class="bg-gray-900 text-white min-h-screen w-full overflow-x-hidden">
     <script language="javascript">
+        function playText(stext) {
+            CWASA.playSiGMLText(stext);
+        }
 
-// console.log("hello");
+        // sets url for sigml
+        function setSiGMLURL(sigmlURL) {
+            console.log("hello");
+            var loc = window.location.href;
+            var locDir = loc.substring(0, loc.lastIndexOf('/'));
+            sigmlURL = locDir + "/" + sigmlURL;
+            console.log("URL "+sigmlURL);
+            document.getElementById("URLText").value = sigmlURL;
+            return sigmlURL;
+        }
+        // starts the player animation
+        function startPlayer(sigmlURL) {
+            sigmlURL = setSiGMLURL(sigmlURL);
+            console.log("URL "+sigmlURL);
+            // Equivalent to click on Sign button
+            CWASA.getLogger("myLog","warn");
+            CWASA.playSiGMLURL(sigmlURL);
+            CWASA.getLogger("myLog","warn");
+        }
+    </script>
 
-function playText(stext) {
-	CWASA.playSiGMLText(stext);
-}
-
-// sets url for sigml
-function setSiGMLURL(sigmlURL) {
-	console.log("hello");
-	var loc = window.location.href;
-    var locDir = loc.substring(0, loc.lastIndexOf('/'));
-	// console.log("SiGML: "+sigmlURL);
-	// console.log("Location Dir: "+locDir);
-	sigmlURL = locDir + "/" + sigmlURL;
-    // console.log("here");
-	console.log("URL "+sigmlURL);
-	document.getElementById("URLText").value = sigmlURL;
-	return sigmlURL;
-}
-// starts the player animation
-function startPlayer(sigmlURL) {
-	sigmlURL = setSiGMLURL(sigmlURL);
-	console.log("URL "+sigmlURL);
-    // Equivalent to click on Sign button
-    CWASA.getLogger("myLog","warn");
-	CWASA.playSiGMLURL(sigmlURL);
-    CWASA.getLogger("myLog","warn");
-}
-</script>
-<div class="main">
-    <div class="container">
-        <!-- animation player frame -->
-        <div class="player card" >
-            <a id="player"></a>
-            <div class="anim"> 
-                <div style="box-sizing: border-box; width: 100%; height: 100%; padding: 15px;" >
-                    <table align="center" style="width:100%; height:100%;" >
-                    <tr align="center">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <h1 class="text-3xl font-bold text-center text-purple-400 mb-6">Text and Voice to Indian Sign Language</h1>
+        
+        <div class="bg-gray-800 rounded-xl shadow-2xl p-6 mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Avatar Signer Section -->
+                <div class="flex flex-col items-center">
+                    <div class="player w-full h-96 bg-white rounded-lg overflow-hidden shadow-lg border-4 border-purple-500"> 
+                        <div class="anim w-full h-full p-2"> 
+                            <div class="CWASAAvatar av0 w-full h-full"></div>
+                        </div>
+                    </div>
                     
-                    <!--================================================================-->
-                    <!-- CWA signing avatar panel 0 -->
-                    <!--================================================================-->
-                    <!-- Replaced by an avatar panel -->
-                    <!--================================================================-->
-                    <td width="100%" height="90%" >
-                        <div class="CWASAAvatar av0" align="center" ></div>
-                    </td>
-                    <!--================================================================-->
+                    <div class="mt-4 flex flex-wrap justify-center items-center gap-2">
+                        <span class="CWASAAvMenu av0 text-purple-400"></span>
+                        <button class="bttnPlaySiGMLURL av0 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-full transition-colors">Sign</button>
+                        <button class="bttnStop av0 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-full transition-colors">Stop</button>
+                        <span class="CWASASpeed av0"></span>
+                    </div>
                     
-                    </tr><tr>
-                    
-                    <td align="center" >
-                    
-                    <span class="CWASAAvMenu av0" ></span>
-                    <input type="button" value="Sign" class="bttnPlaySiGMLURL av0" />
-                    <input type="button" value="Stop" class="bttnStop av0" />
-                    <span class="CWASASpeed av0" ></span>
-                    <br/>
-                    
-                    <span style="font-size: 90%;" >
-                    Sign/Frame:
-                    <input class="txtSF av0" value="0/0" type="text">
-                    Gloss:
-                    <input class="txtGloss av0" value="[none]" type="text">
-                    </span>
-                    <span class="spanInfo av0">
-                        Status:
-                        <input type="text" class="statusExtra av0">
+                    <div class="mt-2 text-sm flex flex-wrap justify-center items-center gap-2">
+                        <span class="text-gray-300">Sign/Frame:</span>
+                        <input class="txtSF av0 bg-gray-700 text-yellow-400 border border-gray-600 rounded px-2 py-1" value="0/0" type="text">
+                        <span class="text-gray-300">Gloss:</span>
+                        <input class="txtGloss av0 bg-gray-700 text-yellow-400 border border-gray-600 rounded px-2 py-1" value="[none]" type="text">
+                        <span class="spanInfo av0 flex items-center gap-2">
+                            <span class="text-gray-300">Status:</span>
+                            <input type="text" class="statusExtra av0 bg-gray-700 text-yellow-400 border border-gray-600 rounded px-2 py-1">
                         </span>
-                    <!--  CachedSiGML URL  -->
+                    </div>
+                    
+                    <!-- CachedSiGML URL -->
                     <input type="text" id="URLText" class="txtSiGMLURL av0 undisplayed" value="" />
                     
                     <script language="javascript">
-                    // Set default sign
-                    // console.log("here");
-                    setSiGMLURL("SignFiles/B.sigml");
-                    
+                        // Set default sign
+                        setSiGMLURL("SignFiles/B.sigml");
                     </script>
-                    
-                    </td>
-                    </tr>
-                    
-                    </table>
-                    
+                </div>
+
+                <!-- Input and Controls Section -->
+                <div class="flex flex-col space-y-4">
+                    <div class="englishInput bg-gray-700 p-4 rounded-lg shadow-md">
+                        <select id="languageSelect" class="bg-gray-800 text-white border border-gray-600 rounded-lg px-3 py-2">
+                            <option value="en">English</option>
+                            <option value="ta">Tamil</option>
+                        </select>                          
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Enter Text to Translate:</label>
+                        <form method="POST" id="form" class="flex gap-2">
+                            <input id="text" type="text" name="text" autocomplete="off" placeholder="Type text to translate to sign language" 
+                                  class="flex-1 bg-gray-800 text-white placeholder-gray-500 border border-gray-600 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <button id="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                Translate
+                            </button>
+                            <!-- Speech button will be added here by JS -->
+                        </form>
                     </div>
                     
+                    <div class="curr_playing bg-indigo-900 p-4 rounded-lg shadow-md flex items-center">
+                        <span class="font-medium text-gray-300">Currently Signing:</span> 
+                        <p class="curr_word_playing ml-2 text-xl font-bold text-yellow-400">None</p>
+                    </div>
+                    
+                    <div class="islOutput bg-gray-700 p-4 rounded-lg shadow-md">
+                        <span class="font-medium text-gray-300">ISL Translation:</span> 
+                        <p id="isl_text" class="mt-2 text-lg text-green-400 font-medium">No translation yet</p>
+                    </div>
+                </div>
             </div>
-            
-        </div>
-        <!-- input for text -->
-        <div class="englishInput">
-            <form method="POST" id= 'form'>
-                Input:<input id="text" type="text" name="text" autocomplete="off">
-                <button id = "submit"  >Submit</button>
-                </form>
-            <!-- <button class="btn-primary bttnPlaySiGMLURL av0">Submit</button> -->
-            <!-- <input type="button" value="Sign" class="bttnPlaySiGMLURL av0" /> -->
-        </div>
-        <div class="curr_playing">
-            Current Word :- <p class="curr_word_playing"></p>
-        </div>
-        <div class="islOutput">
-            ISL text: <p id ="isl_text"></p>
 
+            <!-- Available Words Section -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold text-purple-400 mb-4 border-b border-gray-700 pb-2">
+                    Available Words:
+                </h3>
+                <div class="max-h-64 overflow-y-auto bg-gray-900 rounded-lg p-4">
+                    <ul class="test_list grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                        <!-- Words will be added dynamically -->
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="test_word_list">
-            Available Words:- 
-            <ul class="test_list">
-               
-            </ul>
-        </div>
-       
     </div>
-</div>
+
+
     <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/player.js') }}"></script> -->
-
 </body>
 </html>

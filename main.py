@@ -1,13 +1,7 @@
 import json
 import os
-# from nltk.parse import stanford
 import stanza 
 stanza.download('en',model_dir='stanza_resources')
-# stanza.install_corenlp()
-# from nltk.stem import WordNetLemmatizer
-# from nltk.tokenize import word_tokenize
-# from nltk.tokenize import sent_tokenize
-# from nltk.corpus import stopwords
 from nltk.parse.stanford import StanfordParser
 from nltk.tree import *
 from six.moves import urllib
@@ -24,6 +18,9 @@ app =Flask(__name__,static_folder='static', static_url_path='')
 import stanza
 # from stanza.server import CoreNLPClient
 import pprint 
+from googletrans import Translator
+translator = Translator()
+
 
 # These few lines are important
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -39,7 +36,6 @@ os.environ['NLTK_DATA'] = '/usr/local/share/nltk_data/'
 def is_parser_jar_file_present():
     stanford_parser_zip_file_path = os.environ.get('CLASSPATH') + ".jar"
     return os.path.exists(stanford_parser_zip_file_path)
-
 
 def reporthook(count, block_size, total_size):
     global start_time
@@ -78,7 +74,6 @@ def extract_models_jar_file():
     with zipfile.ZipFile(stanford_models_zip_file_path) as z:
         z.extractall(path=stanford_models_dir)
 
-
 # checks jar file and downloads if not present 
 def download_required_packages():
     if not os.path.exists(os.environ.get('CLASSPATH')):
@@ -91,11 +86,6 @@ def download_required_packages():
     if not os.path.exists(os.environ.get('STANFORD_MODELS')):
         extract_models_jar_file()
 
-
-
-
-
-
 # Pipeline for stanza (calls spacy for tokenizer)
 en_nlp = stanza.Pipeline('en',processors={'tokenize':'spacy'})	
 # print(stopwords.words('english'))
@@ -103,8 +93,6 @@ en_nlp = stanza.Pipeline('en',processors={'tokenize':'spacy'})
 # stop words that are not to be included in ISL
 stop_words = set(["am","are","is","was","were","be","being","been","have","has","had",
 					"does","did","could","should","would","can","shall","will","may","might","must","let"]);
-
-
 
 # sentences array
 sent_list = [];
@@ -123,7 +111,6 @@ def convert_to_sentence_list(text):
 		sent_list.append(sentence.text)
 		sent_list_detailed.append(sentence)
 
-
 # converts to words array for each sentence. ex=[ ["This","is","a","test","sentence"]];
 def convert_to_word_list(sentences):
 	temp_list=[]
@@ -136,7 +123,6 @@ def convert_to_word_list(sentences):
 		word_list_detailed.append(temp_list_detailed.copy())
 		temp_list.clear();
 		temp_list_detailed.clear();
-
 
 # removes stop words
 def filter_words(word_list):
@@ -157,7 +143,6 @@ def filter_words(word_list):
 				break;
 	
 	return final_words;
-# 
 
 # removes punctutation 
 def remove_punct(word_list):
@@ -169,7 +154,6 @@ def remove_punct(word_list):
 				words.remove(word_detailed.text);
 				break;
 
-
 # lemmatizes words
 def lemmatize(final_word_list):
 	for words,final in zip(word_list_detailed,final_word_list):
@@ -178,8 +162,7 @@ def lemmatize(final_word_list):
 				if(len(fin)==1):
 					final[i]=fin;
 				else:
-					final[i]=word.lemma;
-				
+					final[i]=word.lemma;				
 	
 	for word in final_word_list:
 		print("final_words",word);
@@ -191,8 +174,6 @@ def label_parse_subtrees(parent_tree):
         tree_traversal_flag[sub_tree.treeposition()] = 0
     return tree_traversal_flag
 
-
-
 # handles if noun is in the tree
 def handle_noun_clause(i, tree_traversal_flag, modified_parse_tree, sub_tree):
     # if clause is Noun clause and not traversed then insert them in new tree first
@@ -201,7 +182,6 @@ def handle_noun_clause(i, tree_traversal_flag, modified_parse_tree, sub_tree):
         modified_parse_tree.insert(i, sub_tree)
         i = i + 1
     return i, modified_parse_tree
-
 
 # handles if verb/proposition is in the tree followed by nouns
 def handle_verb_prop_clause(i, tree_traversal_flag, modified_parse_tree, sub_tree):
@@ -213,7 +193,6 @@ def handle_verb_prop_clause(i, tree_traversal_flag, modified_parse_tree, sub_tre
                 modified_parse_tree.insert(i, child_sub_tree)
                 i = i + 1
     return i, modified_parse_tree
-
 
 # modifies the tree according to POS
 def modify_tree_structure(parent_tree):
@@ -266,19 +245,16 @@ def reorder_eng_to_isl(input_string):
 	parsed_sent = modified_parse_tree.leaves()
 	return parsed_sent
 
-
 # final word list
 final_words= [];
 # final word list that is detailed(dict)
 final_words_detailed=[];
-
 
 # pre processing text
 def pre_process(text):
 	remove_punct(word_list)
 	final_words.extend(filter_words(word_list));
 	lemmatize(final_words)
-
 
 # checks if sigml file exists of the word if not use letters for the words
 def final_output(input):
@@ -304,8 +280,6 @@ def convert_to_final():
 	for words in final_words:
 		final_output_in_sent.append(final_output(words));
 
-
-
 # takes input from the user
 def take_input(text):
 	test_input=text.strip().replace("\n","").replace("\t","")
@@ -319,7 +293,9 @@ def take_input(text):
 	# pass the text through stanza
 	some_text= en_nlp(test_input2);
 	convert(some_text);
-
+def translate_tamil_to_english(text):
+    result = translator.translate(text, src='ta', dest='en')
+    return result.text
 
 def convert(some_text):
 	convert_to_sentence_list(some_text);
@@ -334,7 +310,6 @@ def convert(some_text):
 	convert_to_final();
 	remove_punct(final_output_in_sent)
 	print_lists();
-	
 
 def print_lists():
 	print("--------------------Word List------------------------");
@@ -355,7 +330,6 @@ def clear_all():
 	final_output_in_sent.clear();
 	final_words_dict.clear();
 
-
 # dict for sending data to front end in json
 final_words_dict = {};
 
@@ -364,32 +338,34 @@ def index():
 	clear_all();
 	return render_template('index.html')
 
-
-@app.route('/',methods=['GET','POST'])
+@app.route('/', methods=['GET', 'POST'])
 def flask_test():
-	clear_all();
-	text = request.form.get('text') #gets the text data from input field of front end
-	print("text is", text)
-	if(text==""):
-		return "";
-	take_input(text)
+    clear_all()
+    text = request.form.get('text')  # gets text from frontend
+    lang = request.form.get('language')  # NEW: get language from frontend
 
-	# fills the json 
-	for words in final_output_in_sent:
-		for i,word in enumerate(words,start=1):
-			final_words_dict[i]=word;
+    print("Received text:", text)
+    print("Selected language:", lang)
 
-	print("---------------Final words dict--------------");
+    if text == "":
+        return ""
 
-	for key in final_words_dict.keys():
-		if len(final_words_dict[key])==1:
-			final_words_dict[key]=final_words_dict[key].upper()
-	print(final_words_dict)
+    # If Tamil selected, translate to English
+    if lang == "ta":
+        text = translate_tamil_to_english(text)
+        print("Translated to English:", text)
 
-	print(final_words_dict)
+    take_input(text)
 
-	return final_words_dict;
+    # fill the JSON
+    for words in final_output_in_sent:
+        for i, word in enumerate(words, start=1):
+            final_words_dict[i] = word.upper() if len(word) == 1 else word
 
+    print("---------------Final words dict--------------")
+    print(final_words_dict)
+
+    return final_words_dict
 
 # serve sigml files for animation
 @app.route('/static/<path:path>')
@@ -397,6 +373,11 @@ def serve_signfiles(path):
 	print("here");
 	return send_from_directory('static',path)
 
-
-if __name__=="__main__":
-    app.run(host='0.0.0.0')
+if __name__ == '__main__':
+    app.run(
+        ssl_context=('localhost.pem', 'localhost-key.pem'),
+        host='localhost',  # or your local IP like '192.168.x.x'
+        port=5000,
+        debug=True
+    )
+	
